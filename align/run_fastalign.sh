@@ -1,18 +1,19 @@
 #!/bin/bash
 
-set -ex
+set -e
 
 SCRIPT_DIR="${0%/*.sh}"
 BASE_DIR="${SCRIPT_DIR}/.."
 TEXT_DIR="${BASE_DIR}/text"
 FASTALIGN_OUT="${SCRIPT_DIR}/fastalign"
 
-for lang_pair in ende ; do  # enfi enfr enja ennl enru enzh; do
+for lang_pair in ende enfi enfr enja ennl enru enzh; do
+  echo "Running FastAlign for language pair ${lang_pair}."
   mkdir -p ${FASTALIGN_OUT}/${lang_pair}
 
   paste ${TEXT_DIR}/${lang_pair}/${lang_pair:0:2}_train.removedtags.bpe ${TEXT_DIR}/${lang_pair}/${lang_pair:2}_train.removedtags.bpe | sed -E 's/\t/ ||| /g' > ${FASTALIGN_OUT}/${lang_pair}/train.txt
   paste ${TEXT_DIR}/${lang_pair}/${lang_pair:0:2}_dev.onlytags.removedtags.bpe ${TEXT_DIR}/${lang_pair}/${lang_pair:2}_dev.onlytags.removedtags.bpe | sed -E 's/\t/ ||| /g' > ${FASTALIGN_OUT}/${lang_pair}/dev.txt
-  
+
   dev_lines=`wc -l < ${FASTALIGN_OUT}/${lang_pair}/dev.txt`
 
   cat ${FASTALIGN_OUT}/${lang_pair}/train.txt ${FASTALIGN_OUT}/${lang_pair}/dev.txt > ${FASTALIGN_OUT}/${lang_pair}/all.txt
