@@ -1,3 +1,4 @@
 # Preprocessing output
 bpe/
 text/
+align/fastalign
